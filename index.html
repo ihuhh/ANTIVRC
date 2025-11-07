@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti VRC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Poppins',sans-serif;
+  color:#b6ffb3;
+  text-align:center;
+  overflow-x:hidden;
+  background:url('https://i.pinimg.com/originals/d4/83/58/d4835881ce975a22e561b4461d799d2e.gif') center center/cover fixed no-repeat;
+  backdrop-filter:blur(4px);
+}
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(10,15,10,0.9);
+  padding:15px 30px;
+  box-shadow:0 0 25px #00ff88;
+  border-bottom:1px solid #00ff88;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.logo{
+  height:70px;
+  border-radius:10px;
+  box-shadow:0 0 20px #00ff88;
+  cursor:pointer;
+}
+nav ul{list-style:none;display:flex;gap:20px;}
+nav a{text-decoration:none;color:#b6ffb3;font-weight:500;cursor:pointer;}
+nav a:hover,nav a.active{color:#00ff88;text-shadow:0 0 15px #00ff88;}
+main{padding:80px 20px;min-height:60vh;}
+#main-menu{display:block;}
+h1{
+  font-size:2.6rem;
+  color:#00ff88;
+  text-shadow:0 0 25px #00ff88;
+  animation:glow 3s ease-in-out infinite alternate;
+}
+.desc{margin-top:12px;font-size:1.1rem;color:#b6ffb3;text-shadow:0 0 10px #00ff88;}
+@keyframes glow{from{text-shadow:0 0 10px #00ff88}to{text-shadow:0 0 30px #00ff88,0 0 60px #00ff88}}
+section{margin-top:20px;}
+#gallery-section,#discord-section,#signup-section{display:none;}
+#gallery{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:14px;}
+#gallery img{max-width:200px;border-radius:8px;box-shadow:0 0 20px #00ff88;}
+input[type="email"],input[type="password"],input[type="text"],input[type="tel"]{
+  padding:8px;border-radius:6px;border:none;margin-right:8px;
+}
+button{
+  padding:8px 12px;border-radius:6px;border:none;background:#00ff88;color:#050805;font-weight:600;cursor:pointer;
+}
+button:hover{background:#b6ffb3;}
+footer{
+  margin-top:40px;padding:18px;background:rgba(10,15,10,0.9);
+  box-shadow:0 0 25px #00ff88;color:#b6ffb3;font-size:0.9rem;border-top:1px solid #00ff88;
+  text-align:center;
+}
+.muted{color:#8ff2a1;opacity:0.85;font-size:0.95rem;}
+.field-row{margin-top:12px;}
+.info-box{background:rgba(0,255,136,0.05);padding:12px;border-radius:8px;display:inline-block;text-align:left;}
+.masked{letter-spacing:2px;}
+</style>
+</head>
+<body>
+
+<!-- Background Music -->
+<audio id="bg-music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<header>
+  <img class="logo" src="https://a.storyblok.com/f/178900/640x360/376424fb0b/2f418cb31286a351b0b956ac410b7c5e1395991636_full.jpg/m/640x360" alt="Anti VRC" onclick="showMainMenu()">
+  <nav>
+    <ul>
+      <li><a onclick="showMainMenu()">Home</a></li>
+      <li><a onclick="openComingSoon()">Features</a></li>
+      <li><a onclick="showGallery()">Gallery</a></li>
+      <li><a onclick="openComingSoon()">Download</a></li>
+      <li><a onclick="openDiscordInvite()">Support</a></li>
+      <li><a onclick="showDiscordSection()">Link Discord</a></li>
+      <li><a onclick="logoutAll()">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div id="main-menu">
+    <h1>Welcome to Anti VRC</h1>
+    <p class="desc">by lil jj</p>
+    <p class="muted">Use navigation to open Gallery, Link Discord, or Support.</p>
+  </div>
+
+  <!-- GALLERY -->
+  <section id="gallery-section">
+    <h2>Gallery</h2>
+    <div id="login-form">
+      <div class="field-row">
+        <input type="email" id="email" placeholder="Enter your Gmail">
+        <button onclick="loginGallery()">Next</button>
+      </div>
+    </div>
+    <div id="password-form" style="display:none;">
+      <div class="field-row">
+        <input type="password" id="password" placeholder="Create a password (site only)">
+        <button onclick="setPassword()">Set Password</button>
+      </div>
+    </div>
+    <div id="upload-container" style="display:none; margin-top:12px;">
+      <div class="field-row">
+        <input id="image-upload" type="file" accept="image/*" multiple>
+        <button onclick="uploadImages()">Upload</button>
+        <button onclick="logoutGallery()">Logout</button>
+      </div>
+      <div id="gallery" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- DUPLICATE EMAIL -->
+  <section id="signup-section">
+    <h2>Email already linked</h2>
+    <p class="muted">This Gmail is already associated with an account in this browser.</p>
+    <div style="margin-top:12px;">
+      <button onclick="showMainMenu()">Return Home</button>
+      <button onclick="forceUseExisting()">Use Existing (simulate login)</button>
+    </div>
+  </section>
+
+  <!-- DISCORD LINK -->
+  <section id="discord-section">
+    <h2>Discord Linking</h2>
+    <p class="muted">Click "Open Discord Login" to sign in on Discord. After logging in, click "Confirm Link" to store your Discord username locally (safe, no password captured).</p>
+    <div style="margin-top:12px;">
+      <button onclick="openDiscordLogin()">Open Discord Login</button>
+      <button onclick="confirmDiscordLink()">Confirm Link (manual)</button>
+      <button onclick="unlinkDiscord()">Unlink</button>
+    </div>
+    <div style="margin-top:14px;" id="discord-info-area" class="info-box" aria-live="polite">
+      <div><strong>Linked Discord info:</strong></div>
+      <div style="margin-top:8px;">
+        <div><strong>Username:</strong> <span id="discord-username">—</span></div>
+        <div><strong>Email:</strong> <span id="discord-email">—</span></div>
+        <div><strong>Phone:</strong> <span id="discord-phone">—</span></div>
+        <div style="margin-top:8px;"><button id="toggle-discord-show" onclick="toggleDiscordShow()">Show</button></div>
+      </div>
+    </div>
+    <div id="discord-manual" style="display:none; margin-top:12px;">
+      <div class="field-row"><input type="text" id="manual-discord-username" placeholder="Discord username#0000"></div>
+      <div class="field-row"><input type="email" id="manual-discord-email" placeholder="Discord email (optional)"></div>
+      <div class="field-row"><input type="tel" id="manual-discord-phone" placeholder="Phone (optional)"></div>
+      <div style="margin-top:10px;">
+        <button onclick="saveManualDiscord()">Save Link</button>
+        <button onclick="cancelManualDiscord()">Cancel</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Anti VRC © 2025</p>
+</footer>
+
+<script>
+const audio=document.getElementById('bg-music');
+window.addEventListener('click',()=>{audio.play();},{once:true});
+
+function showMainMenu(){
+  document.getElementById('main-menu').style.display='block';
+  document.getElementById('gallery-section').style.display='none';
+  document.getElementById('signup-section').style.display='none';
+  document.getElementById('discord-section').style.display='none';
+  window.scrollTo(0,0);
+}
+function openComingSoon(){
+  const w=window.open('','_blank');
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coming Soon</title><style>body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:#050805;color:#00ff88;font-family:Poppins,system-ui,Arial;text-align:center}h1{font-size:2.4rem;text-shadow:0 0 20px #00ff88}</style></head><body><div><h1>Coming Soon</h1><p>Stay tuned for updates!</p></div></body></html>`);
+}
+function openDiscordInvite(){window.open('https://discord.gg/3aHjJRPDqH','_blank');}
+
+// ---------------- GALLERY ----------------
+let loggedIn=false;
+function showGallery(){
+  document.getElementById('main-menu').style.display='none';
+  document.getElementById('signup-section').style.display='none';
+  document.getElementById('discord-section').style.display='none';
+  document.getElementById('gallery-section').style.display='block';
+  prefillGalleryState();
+}
+function prefillGalleryState(){
+  const current=localStorage.getItem('currentEmail');
+  const users=JSON.parse(localStorage.getItem('users')||'{}');
+  if(current&&users[current]){
+    loggedIn=true;
+    document.getElementById('login-form').style.display='none';
+    document.getElementById('password-form').style.display='none';
+    document.getElementById('upload-container').style.display='block';
+  }else{
+    loggedIn=false;
+    document.getElementById('login-form').style.display='block';
+    document.getElementById('password-form').style.display='none';
+    document.getElementById('upload-container').style.display='none';
+  }
+  loadGallery();
+}
+function loginGallery(){
+  const email=document.getElementById('email').value.trim();
+  if(!email||!email.includes('@gmail.com')){alert('Enter valid Gmail');return;}
+  const users=JSON.parse(localStorage.getItem('users')||'{}');
+  if(users[email]){
+    document.getElementById('gallery-section').style.display='none';
+    document.getElementById('signup-section').style.display='block';
+  }else{
+    localStorage.setItem('currentEmail',email);
+    document.getElementById('login-form').style.display='none';
+    document.getElementById('password-form').style.display='block';
+  }
+}
+function setPassword(){
+  const pw=document.getElementById('password').value;
+  if(!pw||pw.length<4){alert('Password must be 4+ chars');return;}
+  const email=localStorage.getItem('currentEmail');
+  const users=JSON.parse(localStorage.getItem('users')||'{}');
+  users[email]=pw;
+  localStorage.setItem('users',JSON.stringify(users));
+  loggedIn=true;
+  document.getElementById('password-form').style.display='none';
+  document.getElementById('upload-container').style.display='block';
+  alert('Account created for '+email);
+  loadGallery();
+}
+function forceUseExisting(){
+  const users=JSON.parse(localStorage.getItem('users')||'{}');
+  const keys=Object.keys(users);
+  if(keys.length===0){alert('No accounts found');showMainMenu();return;}
+  localStorage.setItem('currentEmail',keys[0]);
+  showGallery();
+}
+function logoutGallery(){
+  localStorage.removeItem('currentEmail');
+  loggedIn=false;
+  document.getElementById('upload-container').style.display='none';
+  document.getElementById('login-form').style.display='block';
+  document.getElementById('gallery').innerHTML='';
+}
+function uploadImages(){
+  if(!loggedIn){alert('Please login first');return;}
+  const files=document.getElementById('image-upload').files;
+  if(!files||files.length===0){alert('Select at least one image');return;}
+  const stored=JSON.parse(localStorage.getItem('galleryImages')||'[]');
+  for(let file of files){
+    const reader=new FileReader();
+    reader.onload=(e)=>{
+      stored.push(e.target.result);
+      localStorage.setItem('galleryImages',JSON.stringify(stored));
+      displayImage(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+  document.getElementById('image-upload').value='';
+}
+function displayImage(src){
+  const gallery=document.getElementById('gallery');
+  const img=document.createElement('img');
+  img.src=src;
+  gallery.appendChild(img);
+}
+function loadGallery(){
+  const gallery=document.getElementById('gallery');
+  gallery.innerHTML='';
+  const stored=JSON.parse(localStorage.getItem('galleryImages')||'[]');
+  stored.forEach(s=>displayImage(s));
+}
+
+// ---------------- DISCORD ----------------
+function showDiscordSection(){
+  document.getElementById('main-menu').style.display='none';
+  document.getElementById('gallery-section').style.display='none';
+  document.getElementById('signup-section').style.display='none';
+  document.getElementById('discord-section').style.display='block';
+  refreshDiscordDisplay();
+}
+function openDiscordLogin(){
+  window.open('https://discord.com/login','_blank');
+  alert('Discord login opened in new tab. After logging in, click Confirm Link.');
+}
+function confirmDiscordLink(){
+  document.getElementById('discord-manual').style.display='block';
+  document.getElementById('manual-discord-username').focus();
+}
+function cancelManualDiscord(){document.getElementById('discord-manual').style.display='none';}
+function saveManualDiscord(){
+  const username=document.getElementById('manual-discord-username').value.trim();
+  if(!username){alert('Enter Discord username');return;}
+  const email=document.getElementById('manual-discord-email').value.trim();
+  const phone=document.getElementById('manual-discord-phone').value.trim();
+  const d={username,email,phone};
+  localStorage.setItem('discordLink',JSON.stringify(d));
+  document.getElementById('discord-manual').style.display='none';
+  refreshDiscordDisplay();
+  alert('Discord linked locally as '+username);
+  showMainMenu();
+}
+function unlinkDiscord(){
+  localStorage.removeItem('discordLink');
+  refreshDiscordDisplay();
+  alert('Discord unlinked');
+}
+let discordShown=false;
+function toggleDiscordShow(){
+  discordShown=!discordShown;
+  document.getElementById('toggle-discord-show').textContent=discordShown?'Hide':'Show';
+  refreshDiscordDisplay();
+}
+function refreshDiscordDisplay(){
+  const data=JSON.parse(localStorage.getItem('discordLink')||'null');
+  const userEl=document.getElementById('discord-username');
+  const emailEl=document.getElementById('discord-email');
+  const phoneEl=document.getElementById('discord-phone');
+  if(!data){userEl.textContent='—';emailEl.textContent='—';phoneEl.textContent='—';return;}
+  if(discordShown){
+    userEl.textContent=data.username||'—';
+    emailEl.textContent=data.email||'—';
+    phoneEl.textContent=data.phone||'—';
+  }else{
+    userEl.textContent=maskString(data.username||'—');
+    emailEl.textContent=maskEmail(data.email||'—');
+    phoneEl.textContent=maskPhone(data.phone||'—');
+  }
+}
+function maskString(s){if(s.length<=3)return'***';return s[0]+'***'+s.slice(-1);}
+function maskEmail(e){if(!e)return'***';const parts=e.split('@');if(parts.length!==2)return'***';return parts[0][0]+'***@'+parts[1];}
+function maskPhone(p){if(!p)return'***';return'***-***-'+p.slice(-4);}
+
+// ---------------- LOGOUT ALL ----------------
+function logoutAll(){
+  localStorage.clear();
+  alert('All data cleared. You have logged out.');
+  showMainMenu();
+}
+
+window.addEventListener('load',()=>{prefillGalleryState();refreshDiscordDisplay();});
+</script>
+</body>
+</html>
